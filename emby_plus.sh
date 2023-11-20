@@ -6,10 +6,10 @@ if [ $1 ]; then
 	cpu_arch=$(uname -m)
 	case $cpu_arch in
                 "x86_64" | *"amd64"*)
-                        docker pull lovechen/embyserver:4.8.0.56
+                        docker pull lovechen/embyserver:latest
 			;;
                 "aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-                        docker pull lovechen/embyserver_arm64v8:4.8.0.56
+                        docker pull lovechen/embyserver_arm64v8:latest
                         ;;
                 *)
                         echo "目前只支持intel64和amd64架构，你的架构是：$cpu_arch"
@@ -17,7 +17,7 @@ if [ $1 ]; then
                         ;;
         esac
 	
-	docker_exist=$(docker images |grep lovechen/embyserver |grep 4.8.0.56)
+	docker_exist=$(docker images |grep lovechen/embyserver |grep latest)
 	if [ -z "$docker_exist" ]; then
 		echo "拉取镜像失败，请检查网络，或者翻墙后再试"
 		exit 1
@@ -96,14 +96,14 @@ if [ $1 ]; then
 	wget -q -O /tmp/Emby.Server.Implementations.dll http://docker.xiaoya.pro/Emby.Server.Implementations.dll
 	case $cpu_arch in
 		"x86_64" | *"amd64"*)
-			docker run -d --name emby -v $1/config:/config -v $1/xiaoya:/media --net=host --user 0:0 --restart always lovechen/embyserver:4.8.0.56
+			docker run -d --name emby -v $1/config:/config -v $1/xiaoya:/media --net=host --user 0:0 --restart always lovechen/embyserver:latest
 			docker cp /tmp/Emby.Server.Implementations.dll emby:/system/
 			docker exec -i emby chmod 644 /system/Emby.Server.Implementations.dll
 			docker restart emby
 			echo "一键全家桶全部安装完成"
 			;;
 		"aarch64" | *"arm64"* | *"armv8"* | *"arm/v8"*)
-		        docker run -d --name emby -v $1/config:/config -v $1/xiaoya:/media --net=host  --user 0:0 --restart always lovechen/embyserver_arm64v8:4.8.0.56
+		        docker run -d --name emby -v $1/config:/config -v $1/xiaoya:/media --net=host  --user 0:0 --restart always lovechen/embyserver_arm64v8:latest
 			docker cp /tmp/Emby.Server.Implementations.dll emby:/system/
                         docker exec -i emby chmod 644 /system/Emby.Server.Implementations.dll
                         docker restart emby
